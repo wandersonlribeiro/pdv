@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="bread">
+  <i class="fa-solid fa-angle-left" style="color: #67a9ff; font-size: 20px;"></i>
+  <a href="{{ url_for('main.listar_funcionarios') }}"> Voltar para Funcionários</a>
+
+</div>
+<div class="content-wrapper-700">
+  <div class="content-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>{{ 'Editar Funcionário' if editar else 'Cadastrar Funcionário' }}<br>
+        <span><strong>Lanchonete</strong> PDV</span>
+      </h2>
+    </div>
+    <div>
+      <i class="fas {{ 'fa-user-pen' if editar else 'fa-user-plus' }}" style="font-size: 48px; color: #004aad;"></i>
+    </div>
+  </div>
+
+  <form class="venda-form" method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.nome.label(class="form-label") }}
+      {{ form.nome(class="form-control") }}
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.cargo.label(class="form-label") }}
+        {{ form.cargo(class="form-control") }}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.telefone.label(class="form-label") }}
+        {{ form.telefone(class="form-control") }}
+      </div>
+    </div>
+
+    {{ form.submit(class="btn button-green") }}
+  </form>
+</div>
+{% endblock %}

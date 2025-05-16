@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 10px;
+        }
+
+        h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+        }
+
+        p {
+            margin: 2px 0;
+        }
+
+        .topo{
+          font-size: 14px;
+          margin: 0;
+          padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 6px 5px 2px;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        .total {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .dia-secao {
+            page-break-inside: avoid;
+        }
+
+        .header {
+            display: flex;
+        }
+
+        hr {
+            margin: 15px 0px 25px;
+        }
+
+        .center-align {
+          text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Relatório de Consumo - {{ funcionario.nome }}</h2>
+        <p class="topo">Cargo: {{ funcionario.cargo }}</p>
+        <p class="topo periodo">Período: {{ "%02d"|format(mes) }}/{{ ano }}</p>
+    </div>
+    <hr>
+    {% if vendas %}
+        {% set dias = {} %}
+        {% for venda in vendas %}
+            {% set dia = venda.data_hora.strftime('%d/%m/%Y') %}
+            {% if dia not in dias %}
+                {% set _ = dias.update({dia: []}) %}
+            {% endif %}
+            {% for item in venda.itens %}
+                {% set _ = dias[dia].append(item) %}
+            {% endfor %}
+        {% endfor %}
+
+        {% for dia, itens in dias.items() %}
+        <div class="dia-secao">
+          <p class="topo"><strong>Data:</strong> {{ dia }}</p>
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 45%;">Produto</th>
+                <th style="width: 10%;">Qtd</th>
+                <th style="width: 20%;">Valor Unit.</th>
+                <th style="width: 25%;">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% set ns = namespace(total=0) %}
+              {% for item in itens %}
+                {% set subtotal = item.quantidade * item.valor_unitario %}
+                {% set ns.total = ns.total + subtotal %}
+                <tr>
+                  <td>{{ item.produto.nome }}</td>
+                  <td class="center-align">{{ item.quantidade }}</td>
+                  <td class="center-align">R$ {{ item.valor_unitario|real }}</td>
+                  <td class="center-align">R$ {{ subtotal|real }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="total">Total do dia:</td>
+                <td class="subtotal center-align"><strong>R$ {{ ns.total|real }}</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      {% endfor %}
+      
+      <!-- ✅ Total do mês aqui, fora do loop de dias -->
+      {% set ns_total = namespace(valor=0) %}
+      {% for itens in dias.values() %}
+        {% for item in itens %}
+          {% set ns_total.valor = ns_total.valor + (item.quantidade * item.valor_unitario) %}
+        {% endfor %}
+      {% endfor %}
+      
+
+      
+      <p class="total" style="text-align: right; margin-top: 15px; font-size: 18px;">
+        <strong>Total do mês: R$ {{ total_mes|real }}</strong>
+      </p>
+      
+      
+    {% else %}
+        <p>Nenhuma compra registrada neste mês.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-wrapper-1000">
+  <div class="content-header">
+    <div>
+      <h2>Produtos {% if mostrar_inativos %}Inativos{% else %}Ativos{% endif %}<br><span><strong>Lanchonete</strong>
+          PDV</span></h2>
+    </div>
+    <div>
+      <i class="fas fa-box" style="font-size: 48px; color: #004aad;"></i>
+    </div>
+  </div>
+
+  <div class="row g-2 mb-3 align-items-center">
+    <!-- Coluna dos botões -->
+    <div class="col-12 col-md-auto d-flex flex-wrap gap-2">
+      {% if not mostrar_inativos %}
+      <a href="{{ url_for('main.listar_produtos', inativos=1) }}" class="btn button-gray">
+        Mostrar Inativos
+      </a>
+      {% else %}
+      <a href="{{ url_for('main.listar_produtos') }}" class="btn button-blue">
+        Voltar para Ativos
+      </a>
+      {% endif %}
+      <a href="{{ url_for('main.cadastrar_produto') }}" class="btn button-green">Novo Produto</a>
+    </div>
+
+    <!-- Coluna do campo de busca -->
+    <div class="col-12 col-md">
+      <form method="GET" action="{{ url_for('main.listar_produtos') }}" class="d-flex">
+        {% if mostrar_inativos %}
+        <input type="hidden" name="inativos" value="1">
+        {% endif %}
+        <input type="text" name="busca" class="form-control me-2" placeholder="Buscar produto..."
+          value="{{ request.args.get('busca', '') }}">
+        <button class="btn btn-outline" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+    </div>
+  </div>
+
+  {% if mostrar_inativos %}
+  <div class="alert alert-info">
+    ⚠️ Produtos inativos não podem ser vendidos, mas permanecem salvos no sistema para controle histórico.
+  </div>
+  {% endif %}
+
+  {% if produtos %}
+  <table class="table table-bordered table-hover table-produtos">
+    <thead class="table-blue">
+      <tr>
+        <th>
+          <a href="{{ url_for('main.listar_produtos', sort='nome', order='asc' if sort_by != 'nome' or order == 'desc' else 'desc', inativos=1 if mostrar_inativos else None, busca=request.args.get('busca')) }}"
+            class="text-white text-decoration-none">
+            Nome
+            {% if sort_by == 'nome' %}
+            <i class="fas fa-sort-up" style="transform: rotate({{ '0' if order == 'asc' else '180' }}deg);"></i>
+            {% endif %}
+          </a>
+        </th>
+        <th>Tipo</th>
+        <th>Data Compra</th>
+        <th>Valor Compra</th>
+        <th>
+          <a href="{{ url_for('main.listar_produtos', sort='quantidade', order='asc' if sort_by != 'quantidade' or order == 'desc' else 'desc', inativos=1 if mostrar_inativos else None, busca=request.args.get('busca')) }}"
+            class="text-white text-decoration-none text-center centered">
+            Qtd.
+            {% if sort_by == 'quantidade' %}
+            <i class="fas fa-sort-up" style="transform: rotate({{ '0' if order == 'asc' else '180' }}deg);"></i>
+            {% endif %}
+          </a>
+        </th>
+        <th>Valor</th>
+        <th>
+          <a href="{{ url_for('main.listar_produtos', sort='validade', order='asc' if sort_by != 'validade' or order == 'desc' else 'desc', inativos=1 if mostrar_inativos else None, busca=request.args.get('busca')) }}"
+            class="text-white text-decoration-none text-center centered">
+            Validade
+            {% if sort_by == 'validade' %}
+            <i class="fas fa-sort-up" style="transform: rotate({{ '0' if order == 'asc' else '180' }}deg);"></i>
+            {% endif %}
+          </a>
+        </th>
+        <th>Fornecedor</th>
+        <th class="text-center">Ações</th>
+      </tr>
+    </thead>
+
+
+    <tbody>
+      {% for p in produtos %}
+      <tr {% if mostrar_inativos %} style="background-color: #f0f0f0;" {% endif %}>
+        <td>{{ p.nome }}</td>
+        <td>{{ p.tipo }}</td>
+        <td>{{ p.data_compra.strftime('%d/%m/%Y') if p.data_compra }}</td>
+        <td>R$ {{ p.valor_compra|real }}</td>
+        <td class="text-center">{{ p.quantidade }}</td>
+        <td>R$ {{ p.valor_unitario|real }}</td>
+        <td class="text-center">
+          {{ p.validade.strftime('%d/%m/%Y') if p.validade else '---' }}
+        </td>
+        <td>{{ p.fornecedor or '---' }}</td>
+        <td class="text-center">
+          <div class="d-flex justify-content-center gap-1 flex-nowrap">
+            {% if not mostrar_inativos %}
+            <a href="{{ url_for('main.editar_produto', id=p.id) }}" class="btn btn-sm btn-warning" title="Editar">
+              <i class="fas fa-edit"></i>
+            </a>
+            <a href="{{ url_for('main.inativar_produto', id=p.id) }}" class="btn btn-sm btn-secondary" title="Inativar">
+              <i class="fas fa-eye-slash"></i>
+            </a>
+            <a href="{{ url_for('main.excluir_produto', id=p.id) }}" class="btn btn-sm btn-danger" title="Excluir">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+            {% else %}
+            <a href="{{ url_for('main.ativar_produto', id=p.id) }}" class="btn btn-sm btn-success" title="Ativar">
+              <i class="fas fa-check"></i>
+            </a>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+  {% else %}
+  <div class="alert alert-warning">Nenhum produto encontrado.</div>
+  {% endif %}
+</div>
+{% endblock %}

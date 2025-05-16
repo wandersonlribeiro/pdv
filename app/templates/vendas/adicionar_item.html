@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .venda-wrapper {
+    max-width: 700px;
+  }
+  .venda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .venda-header h2 {
+    font-weight: 600;
+    color: #004aad;
+  }
+  .venda-header h2 span {
+    font-weight: 400;
+    font-size: 24px;
+
+  }
+  .venda-form label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #004aad;
+  }
+  .btn-green {
+    background-color: #029846;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+  }
+  .btn-green:hover {
+    background-color: #027f3b;
+    color: #fff;
+  }
+
+  .carrinho-item-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .carrinho-box {
+    background: #e9f2ff;
+    border: 2px solid #004aad;
+    border-radius: 8px;
+    padding: 10px 15px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .carrinho-box .nome {
+    font-weight: bold;
+    color: #003369;
+  }
+
+  .carrinho-box .valores {
+    color: #003369;
+    font-size: 14px;
+  }
+
+  .btn-remover {
+    background: #f68b1f;
+    border: 2px solid #d36a00;
+    color: white;
+    margin-left: 10px;
+    padding: 15px 18px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 16px;
+  }
+
+  .btn-remover:hover {
+    background: #dc7a1a;
+  }
+
+  .total-card {
+    background: #cfe6ff;
+    border: 1px solid #004aad;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-pagamento {
+    margin-top: 20px;
+    float: right;
+  }
+</style>
+
+<div class="content-wrapper-700">
+  <div class="content-header">
+    <div>
+      <h2>Adicionar item à venda<br><span><strong>Lanchonete</strong> PDV</span></h2>
+    </div>
+    <div>
+      <i class="fas fa-cart-plus" style="font-size: 40px; color: #004aad;"></i>
+    </div>
+  </div>
+
+  <form method="POST">
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <label class="form-label" for="produto_id">Produto</label>
+        <select class="form-control" name="produto_id" required>
+          {% for produto in produtos %}
+            <option value="{{ produto.id }}">{{ produto.nome }} ({{ produto.quantidade }} disponíveis)</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="quantidade">Quantidade</label>
+        <input type="number" name="quantidade" class="form-control" min="1" required>
+      </div>
+    </div>
+
+    <div class="d-grid">
+      <button type="submit" class="btn button-green" style="padding: 16px;">Adicionar ao Carrinho</button>
+    </div>
+  </form>
+
+  <h4 class="mt-5" style="color: #004aad; font-weight: 600;">Carrinho de produtos</h4>
+
+  {% set total_carrinho = namespace(valor=0) %}
+  {% for item in carrinho %}
+    {% set subtotal = item.quantidade * item.valor_unitario %}
+    {% set total_carrinho.valor = total_carrinho.valor + subtotal %}
+    
+    <div class="carrinho-item-container">
+      <div class="carrinho-box">
+        <div class="nome">{{ item.nome|upper }}</div>
+        <div class="valores">{{ item.quantidade }}UN  X  R$ {{ item.valor_unitario|real }} = <strong>R$ {{ subtotal|real }}</strong></div>
+      </div>
+      <button class="btn-remover" data-bs-toggle="modal" data-bs-target="#modalRemover{{ loop.index }}">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+    </div>
+
+    <!-- Modal de confirmação -->
+    <div class="modal fade" id="modalRemover{{ loop.index }}" tabindex="-1" aria-labelledby="modalLabel{{ loop.index }}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel{{ loop.index }}">Remover item</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            Deseja remover <strong>{{ item.nome }}</strong> do carrinho?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+            <a href="{{ url_for('main.remover_item', index=loop.index0) }}" class="btn btn-danger btn-sm">Remover</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="total-card mt-3">
+    <div>VALOR TOTAL</div>
+    <div>R$ {{ total_carrinho.valor|real }}</div>
+  </div>
+
+  {% if carrinho and carrinho|length > 0 %}
+    <div class="btn-pagamento">
+      <a href="{{ url_for('main.finalizar_venda') }}" class="btn button-green" style="padding: 16px 24px;">Ir para Pagamento</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

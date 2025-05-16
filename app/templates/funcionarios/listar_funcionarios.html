@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="content-wrapper-900">
+  <div class="content-header">
+    <div>
+      <h2>Funcionários<br><span><strong>Lanchonete</strong> PDV</span></h2>
+    </div>
+    <div>
+      <i class="fas fa-users" style="font-size: 48px; color: #004aad;"></i>
+    </div>
+  </div>
+
+  <a href="{{ url_for('main.cadastrar_funcionario') }}" class="btn button-green mb-3">Novo Funcionário</a>
+  <div>
+    <table class="table table-bordered table-hover table-produtos">
+      <thead class="table-blue">
+        <tr>
+          <th>Nome</th>
+          <th>Cargo</th>
+          <th>Telefone</th>
+          <th>Saldo</th>
+          <th style="width: 200px;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for func in funcionarios %}
+        <tr>
+          <td>{{ func.nome }}</td>
+          <td>{{ func.cargo }}</td>
+          <td>{{ func.telefone }}</td>
+          <td>R$ {{ func.saldo_disponivel|real }}</td>
+
+          <td>
+            <a href="{{ url_for('main.editar_funcionario', id=func.id) }}" class="btn btn-sm btn-warning">✏️</a>
+            <a href="{{ url_for('main.excluir_funcionario', id=func.id) }}" class="btn btn-sm btn-danger">🗑️</a>
+            <a href="{{ url_for('main.selecionar_periodo', funcionario_id=func.id) }}"
+              class="btn btn-sm btn-outline-secondary">📄</a>
+            <!-- Botão que dispara o modal -->
+            {% if not func.quitado_mes_anterior %}
+            <button class="btn btn-sm btn-green-sm" data-bs-toggle="modal" data-bs-target="#modalQuitar{{ func.id }}">
+              Pago
+            </button>
+            {% else %}
+            <button class="btn btn-sm btn-secondary" disabled>
+              Mês quitado
+            </button>
+            {% endif %}
+            <!-- Modal de confirmação -->
+            <div class="modal fade" id="modalQuitar{{ func.id }}" tabindex="-1"
+              aria-labelledby="modalQuitarLabel{{ func.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalQuitarLabel{{ func.id }}">Confirmar Quitação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                  </div>
+                  <div class="modal-body text-wrap" style="overflow-wrap: break-word;">
+                    Deseja realmente quitar o mês de <strong>{{ func.nome }}</strong>?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="{{ url_for('main.quitar_mes_funcionario', funcionario_id=func.id) }}"
+                      class="btn btn-success btn-sm">Sim, Quitar</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

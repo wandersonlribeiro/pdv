@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header .titulo {
+      text-align: right;
+    }
+
+    .titulo-texto {
+      font-size: 28px;
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      border: 1px solid #444;
+      padding: 6px;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    .total {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    .clear {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <!-- Você pode inserir o logo aqui se quiser -->
+    </div>
+    <div class="titulo">
+      <h1 class="titulo-texto clear">Relatório de Lucro</h1>
+      <p class="clear" style="margin: 0"><strong>Lanchonete APAE-RIO</strong></p>
+      <p class="clear" style="margin: 0">Período: {{ data_inicio }} a {{ data_fim }}</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <table>
+    <tr>
+      <th>Receita</th>
+      <td>R$ {{ receita_total|real }}</td>
+    </tr>
+    <tr>
+      <th>Despesas</th>
+      <td>R$ {{ despesa_total|real }}</td>
+    </tr>
+    <tr>
+      <th>Lucro</th>
+      <td><strong>R$ {{ lucro|real }}</strong></td>
+    </tr>
+  </table>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    .clear {
+        margin: 0;
+        padding: 0;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .header img {
+      height: 50px;
+    }
+
+    .header .titulo {
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .titulo-texto {
+        font-size: 32px;
+        margin: 0;
+        padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    th, td {
+      border: 1px solid #444;
+      padding: 4px;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    .total {
+        font-size: 24px;
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ Cabeçalho com logo e título -->
+  <div class="header">
+    <div class="titulo">
+      <h1 class="titulo-texto clear" style="margin: 0;">Relatório de Despesas</h1>
+      <h3 class="clear" style="margin: 0;">LANCHONETE APAE-RIO</h3>
+      <p class="clear" style="margin: 0;">Período: {{ data_inicio }} a {{ data_fim }}</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <h2>Compras no Período</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Fornecedor</th>
+        <th>Data da Compra</th>
+        <th>Valor da Compra (R$)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in produtos %}
+      <tr>
+        <td>{{ p.nome }}</td>
+        <td>{{ p.fornecedor }}</td>
+        <td>{{ p.data_compra.strftime('%d/%m/%Y') if p.data_compra }}</td>
+        <td>R$ {{ p.valor_compra|real }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="total">Total de Despesas: <strong>R$ {{ total_despesas|real }}</strong></p>
+</body>
+</html>

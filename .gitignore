@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg-info/
+dist/
+build/
+
+# Virtualenv
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+.env/
+
+# SQLite Database
+*.sqlite3
+*.db
+instance/
+
+# Flask-Migrate
+migrations/
+!migrations/versions/  # mantemos as versões, ignoramos o restante se quiser
+migrations/*.pyc
+
+# IDEs e editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# Arquivos de sistema (Windows, macOS)
+ehthumbs.db
+desktop.ini

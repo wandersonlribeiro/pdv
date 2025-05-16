@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lanchonete PDV</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <!-- Sidebar (visível apenas em desktop) -->
+    <aside class="sidebar desktop-only">
+      <h2>Lanchonete<br><span>APAE <strong> RIO</strong></span></h2>
+      <div class="line"></div>
+      <ul class="menu">
+        <li><a href="{{ url_for('main.index') }}"><i class="fas fa-chart-pie"></i> Início</a></li>
+        <div class="menu-item-line"></div>
+        <li><a href="{{ url_for('main.iniciar_venda') }}"><i class="fas fa-cart-plus"></i> Nova Venda</a></li>
+        <div class="menu-item-line"></div>
+        <li><a href="{{ url_for('main.listar_produtos') }}"><i class="fas fa-box"></i> Produtos</a></li>
+        <div class="menu-item-line"></div>
+        <li><a href="{{ url_for('main.listar_funcionarios') }}"><i class="fas fa-users"></i> Funcionários</a></li>
+        <div class="menu-item-line"></div>
+        <li class="has-submenu">
+          <a href="#" onclick="toggleSubmenu(event)">
+            <i class="fas fa-file-invoice-dollar"></i> Relatórios
+            <i class="fas fa-chevron-down submenu-icon" style="float: right; margin-left: 16px;"></i>
+          </a>
+          <ul class="submenu">
+            <li style="margin: auto;"><a href="{{ url_for('main.relatorio_fechamento') }}">Receitas</a></li>
+            <div class="submenu-item-line"></div>
+            <li style="margin: auto;"><a href="{{ url_for('main.relatorio_despesas') }}">Despesas</a></li>
+            <div class="submenu-item-line"></div>
+            <li style="margin: auto;"><a href="{{ url_for('main.relatorio_lucro') }}">Lucro</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">
+          {{ message }}
+          <span class="close" onclick="this.parentElement.style.display='none';">×</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+    </main>
+  </div>
+
+  <!-- Menu inferior (mobile) -->
+  <nav class="mobile-menu">
+    <a href="{{ url_for('main.index') }}" class="{% if request.endpoint == 'main.index' %}active{% endif %}">
+      <i class="fas fa-home"></i>
+    </a>
+    <a href="{{ url_for('main.iniciar_venda') }}"
+      class="{% if request.endpoint == 'main.adicionar_item' %}active{% endif %}">
+      <i class="fas fa-cart-plus"></i>
+    </a>
+    <a href="{{ url_for('main.listar_produtos') }}"
+      class="{% if request.endpoint == 'main.listar_produtos' %}active{% endif %}">
+      <i class="fas fa-box"></i>
+    </a>
+    <a href="{{ url_for('main.listar_funcionarios') }}"
+      class="{% if request.endpoint == 'main.listar_funcionarios' %}active{% endif %}">
+      <i class="fas fa-users"></i>
+    </a>
+    <a href="{{ url_for('main.relatorio_fechamento') }}"
+      class="{% if request.endpoint == 'main.relatorio_fechamento' %}active{% endif %}">
+      <i class="fas fa-chart-line"></i>
+    </a>
+  </nav>
+  <script>
+    function toggleSubmenu(event) {
+      event.preventDefault();
+      const parent = event.currentTarget.closest('.has-submenu');
+      parent.classList.toggle('open');
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

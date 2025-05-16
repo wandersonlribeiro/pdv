@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="content-wrapper-700">
+  <div class="content-header">
+    <div>
+      <h2>Cadastrar Produto<br><span><strong>Lanchonete</strong> PDV</span></h2>
+    </div>
+    <div>
+      <i class="fas fa-download" style="font-size: 40px; color: #004aad;"></i>
+    </div>
+  </div>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        {{ form.nome.label(class="form-label") }}
+        {{ form.nome(class="form-control") }}
+      </div>
+      <div class="col-md-6">
+        {{ form.tipo.label(class="form-label") }}
+        {{ form.tipo(class="form-control") }}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        {{ form.data_compra.label(class="form-label") }}
+        {{ form.data_compra(class="form-control") }}
+      </div>
+      <div class="col-md-4">
+        {{ form.valor_compra.label(class="form-label") }}
+        {{ form.valor_compra(class="form-control") }}
+      </div>
+      <div class="col-md-4">
+        {{ form.quantidade.label(class="form-label") }}
+        {{ form.quantidade(class="form-control") }}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        {{ form.valor_unitario.label(class="form-label") }}
+        {{ form.valor_unitario(class="form-control") }}
+      </div>
+      <div class="col-md-8">
+        {{ form.validade.label(class="form-label") }}
+        {{ form.validade(class="form-control") }}
+      </div>
+    </div>
+
+    <div class="mb-4">
+      {{ form.fornecedor.label(class="form-label") }}
+      {{ form.fornecedor(class="form-control") }}
+    </div>
+
+    <div class="btn-wrapper">
+      <button type="submit" class="btn button-green">Cadastrar</button>
+      <a href="{{ url_for('main.listar_produtos') }}" class="btn button-gray">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

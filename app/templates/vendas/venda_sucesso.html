@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .sucesso-container {
+    max-width: 600px;
+    margin: 100px 0px;
+    text-align: center;
+    padding: 40px;
+    background-color: #f4f8ff;
+    border: 2px solid #004aad;
+    border-radius: 16px;
+  }
+
+  .sucesso-container i {
+    font-size: 64px;
+    color: #029846;
+    margin-bottom: 20px;
+  }
+
+  .sucesso-container h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #004aad;
+  }
+
+  .sucesso-container p {
+    font-size: 18px;
+    margin-top: 10px;
+    color: #333;
+  }
+
+  .btn-group {
+    margin-top: 30px;
+  }
+
+  .btn-group a {
+    margin: 5px;
+    padding: 12px 20px;
+    font-weight: 600;
+  }
+
+  .btn-verde {
+    background-color: #029846;
+    color: white;
+  }
+
+  .btn-verde:hover {
+    background-color: #027c3a;
+  }
+
+  .btn-azul {
+    background-color: #004aad;
+    color: white;
+  }
+
+  .btn-azul:hover {
+    background-color: #00307e;
+  }
+
+   /* === RESPONSIVO === */
+   @media (max-width: 768px) {
+      .sucesso-container {
+        margin: 0px auto 0px;
+      }
+    }
+
+</style>
+
+<div class="sucesso-container">
+  <i class="fas fa-check-circle"></i>
+  <h1>Venda realizada com sucesso!</h1>
+
+  <div class="btn-group">
+    <a href="{{ url_for('main.iniciar_venda') }}" class="btn btn-verde">Nova Venda</a>
+    <a href="{{ url_for('main.index') }}" class="btn btn-azul">Voltar ao Início</a>
+  </div>
+</div>
+{% endblock %}

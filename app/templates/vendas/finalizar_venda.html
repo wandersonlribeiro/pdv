@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .pagamento-container {
+    max-width: 700px;
+  }
+
+  .pagamento-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .pagamento-header h2 {
+    font-weight: 600;
+    color: #004aad;
+    margin: 0;
+  }
+
+  .pagamento-header span {
+    font-weight: 400;
+    font-size: 24px;
+  }
+
+  .item-box {
+    background: #e9f2ff;
+    border: 1px solid #004aad;
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #003369;
+  }
+
+  .total-box {
+    background: #cfe6ff;
+    border: 1px solid #004aad;
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+
+  .form-section {
+    margin-top: 40px;
+  }
+
+  .form-section h2 {
+    font-weight: 600;
+    color: #004aad;
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    font-weight: 600;
+    font-size: 16px;
+    color: #004aad;
+    margin-bottom: 5px;
+  }
+
+  .form-control {
+    max-width: 300px;
+    border: 1px solid #003369;
+  }
+
+  .btn-azul {
+    background-color: #004aad;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+  }
+
+  .btn-azul:hover {
+    background-color: #00357a;
+    color: #fff;
+  }
+
+  .btn-verde {
+    background-color: #029846;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+  }
+
+  .btn-verde:hover {
+    background-color: #027f3b;
+    color: #fff;
+  }
+
+</style>
+
+<div class="pagamento-container">
+  <div class="pagamento-header">
+    <div>
+      <h2>Receber Pagamento</h2>
+      <span><strong>Lanchonete</strong> PDV</span>
+    </div>
+    <div>
+      <i class="fas fa-cart-plus" style="font-size: 40px; color: #004aad;"></i>
+    </div>
+  </div>
+
+  {% set total = namespace(valor=0) %}
+  {% for item in carrinho %}
+    {% set subtotal = item.quantidade * item.valor_unitario %}
+    {% set total.valor = total.valor + subtotal %}
+    <div class="item-box">
+      <div>{{ item.nome|upper }}</div>
+      <div>{{ item.quantidade }}UN  X  R$ {{ item.valor_unitario|real }}  =  <strong>R$ {{ subtotal|real }}</strong></div>
+    </div>
+  {% endfor %}
+
+  <div class="total-box">
+    <div>VALOR TOTAL</div>
+    <div>R$ {{ total.valor|real }}</div>
+  </div>
+
+  <div class="form-section">
+    <h2>Informações de Pagamento</h2>
+    <form method="POST" action="{{ url_for('main.finalizar_venda') }}">
+      <div class="mb-3">
+        <label for="cliente_tipo" class="form-label">Tipo de Cliente:</label>
+        <select name="cliente_tipo" id="cliente_tipo" class="form-control" onchange="mostrarFuncionario()">
+          <option value="Externo">Externo</option>
+          <option value="Funcionário">Funcionário</option>
+        </select>
+      </div>
+
+      <div class="mb-4" id="funcionario_select" style="display: none;">
+        <label for="funcionario_id" class="form-label">Selecione o Funcionário:</label>
+        <select name="funcionario_id" class="form-control">
+          {% for f in funcionarios %}
+            <option value="{{ f.id }}">{{ f.nome }} (Saldo disponível: R$ {{ f.saldo|real }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-4" id="forma_pagamento_select">
+        <label class="form-label">Forma de Pagamento:</label>
+        <select class="form-control" name="forma_pagamento" required>
+          <option value="Pix">Pix</option>
+          <option value="Dinheiro">Dinheiro</option>
+          <option value="Cartão de Débito">Cartão de Débito</option>
+          <option value="Cartão de Crédito">Cartão de Crédito</option>
+        </select>
+      </div>
+
+      <a href="{{ url_for('main.adicionar_item') }}" class="btn btn-azul">Voltar ao Carrinho</a>
+      <button type="submit" class="btn btn-verde">Receber Pagamento</button>
+    </form>
+  </div>
+</div>
+
+  <!-- Informações de consumo do funcionário -->
+  {% if consumo_funcionario %}
+  <div class="alert alert-danger mt-3">
+    <strong>{{ consumo_funcionario.nome }}</strong> possuisaldo disponível de:
+    <strong>R$ {{ (consumo_funcionario.limite - consumo_funcionario.consumido)|real }}</strong><br>
+    O valor atual do carrinho, ultrapassa o valor disponível.</strong>
+  </div>
+  {% endif %}
+
+<script>
+  function mostrarFuncionario() {
+    var tipo = document.getElementById("cliente_tipo").value;
+    var divFuncionario = document.getElementById("funcionario_select");
+    var divPagamento = document.getElementById("forma_pagamento_select");
+
+    if (tipo === "Funcionário") {
+      divFuncionario.style.display = "block";
+      divPagamento.style.display = "none";
+    } else {
+      divFuncionario.style.display = "none";
+      divPagamento.style.display = "block";
+    }
+  }
+
+  // Executa uma vez ao carregar a página para aplicar o comportamento correto:
+  document.addEventListener("DOMContentLoaded", mostrarFuncionario);
+</script>
+
+{% endblock %}

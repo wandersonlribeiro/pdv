@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .venda-wrapper {
+    max-width: 700px;
+  }
+  .venda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .venda-header h2 {
+    font-weight: 600;
+    color: #004aad;
+  }
+  .venda-header h2 span {
+    font-weight: 400;
+    font-size: 24px;
+  }
+ 
+  table .table-blue  th{
+    background-color: #004aad;
+    color: #fff;
+  }
+ /* Ajuste para a div envolvente respeitar o layout */
+ .table-responsive {
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
+  .table-produtos {
+     width: 700px;
+  }
+
+  .table-produtos th,
+  .table-produtos td {
+    white-space: nowrap;  /* impede quebra de linha */
+    vertical-align: middle;
+  }
+
+  .table th i {
+    margin-left: 5px;
+  }
+
+    .btn-azul {
+    background-color: #004aad;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+  }
+
+  .btn-azul:hover {
+    background-color: #00357a;
+    color: #fff;
+  }
+
+    .btn-outline-blue {
+    font-weight: 600;
+    border: solid 1px #004aad;
+    color: #004aad;
+    padding: 7px 20px;
+  }
+  .btn-outline-blue:hover {
+    background-color: #004aad;
+    color: #fff;
+  }
+
+</style>
+<div class="venda-wrapper">
+   <div class="venda-header">
+    <div>
+      <h2>Relatório de Despesas<br><span><strong>Lanchonete</strong> PDV</span></h2>
+    </div>
+    <div>
+      <i class="fas fa-file-invoice-dollar" style="font-size: 48px; color: #004aad;"></i>
+    </div>
+  </div>
+
+ <form method="GET" class="row align-items-end">
+  <div class="col-auto">
+    <label for="data_inicio" class="form-label">De:</label>
+    <input type="text" id="data_inicio" name="data_inicio" class="form-control" value="{{ data_inicio or '' }}">
+  </div>
+  <div class="col-auto">
+    <label for="data_fim" class="form-label">Até:</label>
+    <input type="text" id="data_fim" name="data_fim" class="form-control" value="{{ data_fim or '' }}">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-azul">Filtrar</button>
+    <a href="{{ url_for('main.relatorio_despesas',
+                        data_inicio=now().strftime('%d-%m-%Y'),
+                        data_fim=now().strftime('%d-%m-%Y')) }}"
+       class="btn btn-outline-blue">Hoje</a>
+  </div>
+</form>
+
+  <hr>
+
+  {% if produtos %}
+  <h5 class="mt-4">Compras no Período</h5>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover table-produtos">
+      <thead class="table-blue">
+        <tr>
+          <th>Produto</th>
+          <th>Fornecedor</th>
+          <th>Data da Compra</th>
+          <th>Valor da Compra (R$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in produtos %}
+        <tr>
+          <td>{{ p.nome }}</td>
+          <td>{{ p.fornecedor }}</td>
+          <td>{{ p.data_compra.strftime('%d/%m/%Y') if p.data_compra }}</td>
+          <td>R$ {{ p.valor_compra|real }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    </table>
+  </div> 
+  <h4 class="text-end">Total de Despesas: <strong>R$ {{ total_despesas|real }}</strong></h4>
+  <div class="text-end mt-3">
+    <a href="{{ url_for('main.exportar_despesas_pdf', data_inicio=data_inicio, data_fim=data_fim) }}"
+      class="btn btn-outline-danger me-2">Exportar PDF</a>
+
+    <a href="{{ url_for('main.exportar_despesas_excel', data_inicio=data_inicio, data_fim=data_fim) }}"
+      class="btn btn-outline-success">Exportar Excel</a>
+  </div>
+
+
+  {% else %}
+    <p class="mt-4">Nenhuma despesa encontrada para o período selecionado.</p>
+  {% endif %}
+</div>
+
+<!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#data_inicio", {
+    dateFormat: "d-m-Y",
+    defaultDate: "{{ data_inicio }}"
+  });
+  flatpickr("#data_fim", {
+    dateFormat: "d-m-Y",
+    defaultDate: "{{ data_fim }}"
+  });
+</script>
+{% endblock %}
