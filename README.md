@@ -35,30 +35,30 @@ Este é um sistema web simples de PDV (Ponto de Venda) criado para uso na lancho
 
 ## 📦 Instalação
 
-**1. Clone este repositório:**
+**1. Clone este repositório:**  
 git clone https://github.com/wandersonlribeiro/pdv.git
 
-**2. Crie um ambiente virtual:**
+**2. Crie um ambiente virtual:**  
 `python -m venv venv
 source venv/bin/activate  # ou venv\Scripts\activate no Windows`
 
-**3. Insale as dependências:**
+**3. Insale as dependências:**  
 `pip install -r requirements.txt`
 
-**4. Crie a pasta "instance":**
+**4. Crie a pasta "instance":**  
 `mkdir instance`
 
-**5. Inicialize o sistema de migrações. No terminal com o ambiente virtual ativado ((venv)), execute:**
+**5. Inicialize o sistema de migrações. No terminal com o ambiente virtual ativado ((venv)), execute:**  
 `flask db init`
 
-**6. Crie a primeira migração:**
+**6. Crie a primeira migração:**  
 `flask db migrate -m "Criação inicial das tabelas"`
-** Isso gera um arquivo de migração em migrations/versions/ com os comandos SQL para criar as tabelas.**
+** Isso gera um arquivo de migração em migrations/versions/ com os comandos SQL para criar as tabelas.**  
 
-**7. Aplicar a migração (criar as tabelas):**
+**7. Aplicar a migração (criar as tabelas):**  
 `flask db upgrade`
 
-**8. Rode a aplicação:**
+**8. Rode a aplicação:**  
 `flask run --host=0.0.0.0`
 
 
