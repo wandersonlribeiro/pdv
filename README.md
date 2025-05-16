@@ -53,7 +53,7 @@ git clone https://github.com/wandersonlribeiro/pdv.git
 
 **6. Crie a primeira migração:**  
 `flask db migrate -m "Criação inicial das tabelas"`  
-** Isso gera um arquivo de migração em migrations/versions/ com os comandos SQL para criar as tabelas.**  
+Isso gera um arquivo de migração em migrations/versions/ com os comandos SQL para criar as tabelas.
 
 **7. Aplicar a migração (criar as tabelas):**  
 `flask db upgrade`
