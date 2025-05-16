@@ -42,7 +42,7 @@ git clone https://github.com/wandersonlribeiro/pdv.git
 `python -m venv venv`  
 `source venv/bin/activate` ou no Windows: `venv\Scripts\activate` 
 
-**3. Insale as dependências:**  
+**3. Instale as dependências:**  
 `pip install -r requirements.txt`
 
 **4. Crie a pasta "instance":**  
