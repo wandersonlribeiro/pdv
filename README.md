@@ -40,8 +40,7 @@ git clone https://github.com/wandersonlribeiro/pdv.git
 
 **2. Crie um ambiente virtual:**  
 `python -m venv venv`  
-`source venv/bin/activate`  
-ou no Windows: `venv\Scripts\activate` 
+`source venv/bin/activate` ou no Windows: `venv\Scripts\activate` 
 
 **3. Insale as dependências:**  
 `pip install -r requirements.txt`
