@@ -39,8 +39,8 @@ Este é um sistema web simples de PDV (Ponto de Venda) criado para uso na lancho
 git clone https://github.com/wandersonlribeiro/pdv.git
 
 **2. Crie um ambiente virtual:**  
-`python -m venv venv  
-source venv/bin/activate  # ou venv\Scripts\activate no Windows`
+`python -m venv venv`  
+`source venv/bin/activate  # ou venv\Scripts\activate no Windows`
 
 **3. Insale as dependências:**  
 `pip install -r requirements.txt`
